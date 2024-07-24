@@ -100,7 +100,7 @@ type ChatCompletionRequest struct {
 	// Options
 	// Type: "json_object" to enable JSON mode.
 	// Type: "text" to enable plain text mode.
-	Response_Format ResponseFormat `json:"response_format,omitempty"`
+	Response_Format *ResponseFormat `json:"response_format,omitempty"`
 
 	// (Optional - default: null)
 	// System will try to sample deterministically based on the seed provided. The same seed and parameters should return the same result.
@@ -121,12 +121,12 @@ type ChatCompletionRequest struct {
 	// (Optional - default: null)
 	// Only set this when Stream is True
 	// Set an additional chunk to stream before data: [DONE] message.
-	Stream_Options StreamOptions `json:"stream_options,omitempty"`
+	Stream_Options *StreamOptions `json:"stream_options,omitempty"`
 
 	// (Optional - default: null)
 	// A list of tools the model may call
 	// Provide a list of functions the model may generate JSON inputs for. 128 functions max supported.
-	Tools []Tool `json:"tools,omitempty"`
+	Tools *[]Tool `json:"tools,omitempty"`
 
 	// (Optional - default: none)
 	// Do NOT use this parameter in conjunction with Tool_Choice
@@ -139,7 +139,7 @@ type ChatCompletionRequest struct {
 	// (Optional - default: none)
 	// Do NOT use this parameter in conjunction with Tool_Choice_Type
 	// Provide a tool object to be called. This forces the model to use that tool.
-	Tool_Choice Tool `json:"tool_choice,omitempty"`
+	Tool_Choice *Tool `json:"tool_choice,omitempty"`
 
 	// (Optional - default: true)
 	// Whether to enable parallel function calling during tool use
