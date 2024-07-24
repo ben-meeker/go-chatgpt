@@ -143,7 +143,7 @@ type ChatCompletionRequest struct {
 
 	// (Optional - default: true)
 	// Whether to enable parallel function calling during tool use
-	Parallel_Tool_Calls bool `json:"parallel_tool_calls"`
+	Parallel_Tool_Calls bool `json:"parallel_tool_calls,omitempty"`
 }
 
 type ChatMessage struct {
