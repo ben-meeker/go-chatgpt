@@ -83,6 +83,67 @@ type ChatCompletionRequest struct {
 	// (Optional)
 	// A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse
 	User string `json:"user,omitempty"`
+
+	//Additional fields in fork -- Ben Meeker
+
+	// (Optional - default: false)
+	// Return log probabilities of output tokens.
+	LogProbs bool `json:"logprobs,omitempty"`
+
+	// (Optional - default: null)
+	// An integer between 0 and 20 specifying the most likely tokens to return at each token position.
+	// LogProbs MUST be set to TRUE to use this parameter.
+	Top_LogProbs int `json:"top_logprobs,omitempty"`
+
+	// (Optional - default: text)
+	// Specify the format the ChatGPT returns. Compatible with GPT-4o, GPT-4o mini, GPT-4 Turbo, and all GPT-3.5 Turbo models newer that gpt-3.5-turbo-1106
+	// Options
+	// Type: "json_object" to enable JSON mode.
+	// Type: "text" to enable plain text mode.
+	Response_Format ResponseFormat `json:"response_format,omitempty"`
+
+	// (Optional - default: null)
+	// System will try to sample deterministically based on the seed provided. The same seed and parameters should return the same result.
+	// Determinism is not guaranteed, refer to system_fingerprint response paramater.
+	Seed int `json:"seed,omitempty"`
+
+	// (Optional - default: auto)
+	// Specifies latency tier to use for request
+	// 'auto' - system will use scale tier credits until exhausted
+	// 'default' - request processed using default service tier with lower uptime SLA and no latency guarantee.
+	Service_Tier string `json:"service_tier,omitempty"`
+
+	// (Optional - default: false)
+	// If set, partial message deltas will be sent. Tokens will be send as data-only server-sent events as they become available.
+	// Stream terminated by a data: [DONE] message.
+	Stream bool `json:"stream,omitempty"`
+
+	// (Optional - default: null)
+	// Only set this when Stream is True
+	// Set an additional chunk to stream before data: [DONE] message.
+	Stream_Options StreamOptions `json:"stream_options,omitempty"`
+
+	// (Optional - default: null)
+	// A list of tools the model may call
+	// Provide a list of functions the model may generate JSON inputs for. 128 functions max supported.
+	Tools []Tool `json:"tools,omitempty"`
+
+	// (Optional - default: none)
+	// Do NOT use this parameter in conjunction with Tool_Choice
+	// Options
+	// None: No tool will be called and a message will be generated
+	// Auto: Any number of tools can be used and/or message generation will take place
+	// Required: The model must call one or more tools
+	Tool_Choice_Type string `json:"tool_choice,omitempty"`
+
+	// (Optional - default: none)
+	// Do NOT use this parameter in conjunction with Tool_Choice_Type
+	// Provide a tool object to be called. This forces the model to use that tool.
+	Tool_Choice Tool `json:"tool_choice,omitempty"`
+
+	// (Optional - default: true)
+	// Whether to enable parallel function calling during tool use
+	Parallel_Tool_Calls bool `json:"parallel_tool_calls"`
 }
 
 type ChatMessage struct {
@@ -108,6 +169,25 @@ type ChatResponseUsage struct {
 	Prompt_Tokens     int `json:"prompt_tokens"`
 	Completion_Tokens int `json:"completion_tokens"`
 	Total_Tokens      int `json:"total_tokens"`
+}
+
+type ResponseFormat struct {
+	Type string `json:"type"`
+}
+
+type StreamOptions struct {
+	Include_Usage bool `json:"include_usage"`
+}
+
+type Tool struct {
+	Type string `json:"type"`
+	Function FunctionFormat `json:"function"`
+}
+
+type FunctionFormat struct {
+	Description string `json:"description"`
+	Name string `json:"name"`
+	Parameters interface{} `json:"parameters"`
 }
 
 func (c *Client) SimpleSend(ctx context.Context, message string) (*ChatResponse, error) {
